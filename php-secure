@@ -1,0 +1,31 @@
+#!/bin/bash
+
+find ../ ! -wholename "../php-secure/*" -name "*.php" | xargs grep -o "require\(.*?\)" -E | sed -e 's/require *[(]*\(.*\)[)]/\1/g' >> requires
+
+find ../ ! -wholename "../php-secure/*" -name "*.php" | xargs grep -o "include\(.*?\)" -E | sed -e 's/include *[(]*\(.*\)[)]/\1/g' >> requires
+
+find ../ ! -wholename "../php-secure/*" -name "*.php" | xargs grep -o "require_once\(.*?\)" -E | sed -e 's/require_once *[(]*\(.*\)[)]/\1/g' >> requires
+
+find ../ ! -wholename "../php-secure/*" -name "*.php" | xargs grep -o "include_once\(.*?\)" -E | sed -e 's/include_once *[(]*\(.*\)[)]/\1/g' >> requires
+
+echo -e "\n";
+
+echo "Check these files for unwanted requires:";
+
+echo -e "\n";
+
+awk '/http[s|S]*:\/\// { print }' requires
+
+rm requires
+
+echo -e "\n";
+
+echo "Check these files for unwanted curl operations:";
+
+echo -e "\n";
+
+
+grep -E "curl_setopt\(.*?, *CURLOPT_URL *,.*?\)" ../* -R | uniq | sort
+
+
+
