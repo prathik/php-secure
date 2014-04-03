@@ -30,7 +30,7 @@ Enhancing
 
 `sqlite3 php-secure.db`
 
-Add functions that can be injected (example `unlink($_GET['u']`) into injection_functions table.
+Add functions that can be injected (example `unlink($_GET['u'])`) into injection_functions table.
 
 Author
 ------
