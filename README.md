@@ -3,6 +3,11 @@ php-secure
 
 Shell scripts to check if your PHP application is secure.
 
+Requriements
+------------
+
+Sqlite3
+
 Installation
 ------------
 
@@ -16,9 +21,16 @@ Provide execute permission for the script `sudo chmod 0775 php-secure`.
 Running
 -------
 
-Go into the php-secure directory `cd php-secure`.
+Run the script `./php-secure -f <folder-name>`.
 
-Run the script `./php-secure`.
+Enhancing
+---------
+
+###Loading exploits database
+
+`sqlite3 php-secure.db`
+
+Add functions that can be injected (example `unlink($_GET['u']`) into injection_functions table.
 
 Author
 ------
