@@ -3,7 +3,7 @@ php-secure
 
 Shell scripts to check if your PHP application is secure.
 
-Contributions
+Contributors
 -------------
 
 Created by Prathik Rajendran M (@prathikraj)
