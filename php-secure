@@ -33,4 +33,4 @@ echo -e "\nRuning on folder ${f}\n";
 functions=`sqlite3 php-secure.db "select * from injection_functions" | tr "\\n" "|"`
 pat=${functions%?}
 
-find $f -name "*.php" | xargs grep -E "($pat)\([^$]*\\\$[^)]*\)[ ^;]*;" -o
+find $f -name "*.php" | xargs grep -E "($pat)[^;]*;" -o | grep -E "\\$\w+"
