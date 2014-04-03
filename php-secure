@@ -11,11 +11,14 @@ Conribute on: https://github.com/prathik/php-secure
 Credits: Prathik Rajendran M (@prathikraj)                                             
 EOF
 }
-while getopts ":f:" o; do
+while getopts "f:s" o; do
     case "${o}" in
         f)
             f=${OPTARG}
             ;;
+	s)
+	    s=true
+	    ;;
         *)
             usage
             ;;
@@ -28,9 +31,15 @@ if [ -z "${f}" ]; then
 fi
 
 logo
-echo -e "\nRuning on folder ${f}\n";
+echo -e "\nRuning on folder ${f}";
 
 functions=`sqlite3 php-secure.db "select * from injection_functions" | tr "\\n" "|"`
 pat=${functions%?}
 
-find $f -name "*.php" | xargs grep -E "($pat)[^;]*;" -o | grep -E "\\$\w+"
+echo -e "\nCritical\n"
+find $f -name "*.php" | xargs grep -E "($pat)[^;]*;" -o | grep -E "\\\$_(GET|POST)"
+
+if [ -z "${s}" ] ; then
+    echo -e "\nAll\n"
+    find $f -name "*.php" | xargs grep -E "($pat)[^;]*;" -o | grep -E "\\$\w+"
+fi
