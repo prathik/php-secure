@@ -1,31 +1,36 @@
 #!/bin/bash
+usage() { echo "Usage: $0 [-p <string>]" 1>&2; exit 1; }
+logo() {
+cat<<EOF
+  ___ _  _ ___     ___ ___ ___ _   _ ___ ___ 
+ | _ \ || | _ \___/ __| __/ __| | | | _ \ __|
+ |  _/ __ |  _/___\__ \ _| (__| |_| |   / _| 
+ |_| |_||_|_|     |___/___\___|\___/|_|_\___|
 
-find ../ ! -wholename "../php-secure/*" -name "*.php" | xargs grep -o "require\(.*?\)" -E | sed -e 's/require *[(]*\(.*\)[)]/\1/g' >> requires
+Conribute on: https://github.com/prathik/php-secure
+Credits: Prathik Rajendran M (@prathikraj)                                             
+EOF
+}
+while getopts ":f:" o; do
+    case "${o}" in
+        f)
+            f=${OPTARG}
+            ;;
+        *)
+            usage
+            ;;
+    esac
+done
+shift $((OPTIND-1))
 
-find ../ ! -wholename "../php-secure/*" -name "*.php" | xargs grep -o "include\(.*?\)" -E | sed -e 's/include *[(]*\(.*\)[)]/\1/g' >> requires
+if [ -z "${f}" ]; then
+    usage
+fi
 
-find ../ ! -wholename "../php-secure/*" -name "*.php" | xargs grep -o "require_once\(.*?\)" -E | sed -e 's/require_once *[(]*\(.*\)[)]/\1/g' >> requires
+logo
+echo -e "\nRuning on folder ${f}\n";
 
-find ../ ! -wholename "../php-secure/*" -name "*.php" | xargs grep -o "include_once\(.*?\)" -E | sed -e 's/include_once *[(]*\(.*\)[)]/\1/g' >> requires
+functions=('require','include','include_once','require_once','unlink')
+pat=$(echo ${functions[@]}|tr "," "|")
 
-echo -e "\n";
-
-echo "Check these files for unwanted requires:";
-
-echo -e "\n";
-
-awk '/http[s|S]*:\/\// { print }' requires
-
-rm requires
-
-echo -e "\n";
-
-echo "Check these files for unwanted curl operations:";
-
-echo -e "\n";
-
-
-grep -E "curl_setopt\(.*?, *CURLOPT_URL *,.*?\)" ../* -R | uniq | sort
-
-
-
+find $f -name "*.php" | xargs grep -E "($pat)\([^$]*\\\$[^)]*\)[ ^;]*;" -o
