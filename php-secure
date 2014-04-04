@@ -40,10 +40,10 @@ echo -e "\nCritical\n"
 find $f -name "*.php" | xargs grep -E "($pat)[^;]*;" -o | grep -E "\\\$_(GET|POST)"
 
 echo -e "\nConsider adding htmlentities to the following variables\n"
-find $f -name "*.php" | xargs grep -Eo "\\\$\w+[ ]*=[^;]+;" | grep -E "\\\$_(GET|POST)" | grep -v "htmlentities"
+find $f -name "*.php" | xargs grep -Eo "\\\$\w+[ ]*=[^;]+;" | grep -E "\\\$_(GET|POST)" | grep -v "(htmlentities|esc_attr)"
 
 if [ -z "${s}" ] ; then
     echo -e "\nAll\n"
     find $f -name "*.php" | xargs grep -E "($pat)[^;]*;" -o | grep -E "\\$\w+"
-    find $f -name "*.php" | xargs grep -Eo "\\\$\w+[ ]*=[^;]+;" | grep -E "\\\$_(GET|POST)" | grep -v "htmlentities"
+    find $f -name "*.php" | xargs grep -Eo "\\\$\w+[ ]*=[^;]+;" | grep -E "\\\$_(GET|POST)" | grep -v "(htmlentities|esc_attr)"
 fi
